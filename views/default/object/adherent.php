@@ -1,39 +1,39 @@
 <?php
 /**
- * Elgg decision view
+ * elgg-adherents_assoc_manager save form
  *
- * @package Elgg-consents_factory
+ * @package elgg-adherents_assoc_manager
  */
 
 $full = elgg_extract('full_view', $vars, FALSE);
-$decision = elgg_extract('entity', $vars, FALSE);
+$adherent = elgg_extract('entity', $vars, FALSE);
 
-if (!$decision) {
+if (!$adherent) {
 	return;
 }
 
-$owner = $decision->getOwnerEntity();
+$owner = $adherent->getOwnerEntity();
 $owner_icon = elgg_view_entity_icon($owner, 'tiny');
-$container = $decision->getContainerEntity();
+$container = $adherent->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 
-$description = elgg_view('output/longtext', array('value' => $decision->description, 'class' => 'pbl'));
+$description = elgg_view('output/longtext', array('value' => $adherent->description, 'class' => 'pbl'));
 
 $owner_link = elgg_view('output/url', array(
-	'href' => "decision/owner/$owner->username",
+	'href' => "adherents/owner/$owner->username",
 	'text' => $owner->name,
 	'is_trusted' => true,
 ));
 $author_text = elgg_echo('byline', array($owner_link));
 
-$date = elgg_view_friendly_time($decision->time_created);
+$date = elgg_view_friendly_time($adherent->time_created);
 
-$comments_count = $decision->countComments();
+$comments_count = $adherent->countComments();
 //only display if there are commments
 if ($comments_count != 0) {
 	$text = elgg_echo("comments") . " ($comments_count)";
 	$comments_link = elgg_view('output/url', array(
-		'href' => $decision->getURL() . '#comments',
+		'href' => $adherent->getURL() . '#comments',
 		'text' => $text,
 		'is_trusted' => true,
 	));
@@ -42,8 +42,8 @@ if ($comments_count != 0) {
 }
 
 $metadata = elgg_view_menu('entity', array(
-	'entity' => $decision,
-	'handler' => 'decision',
+	'entity' => $adherent,
+	'handler' => 'adherent',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
@@ -61,7 +61,7 @@ if (elgg_in_context('widgets')) {
 if ($full && !elgg_in_context('gallery')) {
 
 	$params = array(
-		'entity' => $decision,
+		'entity' => $adherent,
 		'title' => false,
 		'metadata' => $metadata,
 		'subtitle' => $subtitle,
@@ -70,13 +70,13 @@ if ($full && !elgg_in_context('gallery')) {
 	$summary = elgg_view('object/elements/summary', $params);
 
 	$body = <<<HTML
-<div class="decision elgg-content mts">
+<div class="adherent elgg-content mts">
 	$description
 </div>
 HTML;
 
 	echo elgg_view('object/elements/full', array(
-		'entity' => $decision,
+		'entity' => $adherent,
 		'icon' => $owner_icon,
 		'summary' => $summary,
 		'body' => $body,
@@ -84,10 +84,10 @@ HTML;
 
 } else { // brief view
 
-	$excerpt = elgg_get_excerpt($decision->description);
+	$excerpt = elgg_get_excerpt($adherent->description);
 
 	$params = array(
-		'entity' => $decision,
+		'entity' => $adherent,
 		'metadata' => $metadata,
 		'subtitle' => $subtitle,
 		'content' => $excerpt,

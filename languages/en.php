@@ -10,6 +10,7 @@ $english = array(
 	 */
 	'adherent' => "Adherent",
 	'adherents' => "Adherents",
+	'adherents:statistics' => "Statistics",
 	'adherent:add' => "Add adherent",
 	'adherent:edit' => "Edit adherent",
 
@@ -31,6 +32,15 @@ $english = array(
 	'item:object:adherent' => 'Adherent',
 
 	'adherent:no_title' => 'No title',
+
+	/**
+	 * satistics
+	 */
+	'adherent:statistics' => "Statistics",
+	'adherents:chart:nbr_adherents' => "Number of adherents",
+	'adherents:chart:new_adherents' => "New adherents",
+	'adherents:chart:tooltip:new_adherent' => "%s new adherent",
+	'adherents:chart:tooltip:new_adherents' => "%s new adherents",
 
 	/**
 	 * Status messages

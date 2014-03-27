@@ -7,63 +7,111 @@
  *	@link https://github.com/revenudebase/elgg-adherents_assoc_manager
  **/
 
-elgg_register_event_handler('init','system','adherents_assoc_manager_init');
+// eaam = Elgg Adherents Assoc Manager
+elgg_register_event_handler('init','system','eaam_init');
 
 /**
  * elgg-adherents_assoc_manager init
  */
-function adherents_assoc_manager_init() {
+function eaam_init() {
 
 	$root = dirname(__FILE__);
-	elgg_register_library('elgg:2am', "$root/lib/2am.php");
+	$http_base = '/mod/elgg-adherents_assoc_manager';
+
+	elgg_register_library('elgg:eaam', "$root/lib/eaam.php");
 
 	// actions
-	$action_path = "$root/actions/2am";
-	elgg_register_action('2am/save', "$action_path/save.php");
-	elgg_register_action('2am/delete', "$action_path/delete.php");
-	elgg_register_action('2am/share', "$action_path/share.php");
+	$action_path = "$root/actions/eaam";
+	elgg_register_action('eaam/save', "$action_path/save.php");
+	elgg_register_action('eaam/delete', "$action_path/delete.php");
+	elgg_register_action('eaam/share', "$action_path/share.php");
 
-	elgg_register_page_handler('adherent', 'adherents_assoc_manager_page_handler');
+	elgg_register_page_handler('adherents', 'eaam_page_handler');
 
-	elgg_extend_view('css/elgg', '2am/css');
-	elgg_extend_view('js/elgg', '2am/js');
+	elgg_extend_view('css/elgg', 'eaam/css');
+	elgg_extend_view('js/elgg', 'eaam/js');
+
+	elgg_register_js('footable', array(
+		'src' => "$http_base/vendors/footable/footable.all.min.js",
+		'deps' => array('jquery')
+	));
+	elgg_register_js('jwerty', array(
+		'src' => "$http_base/vendors/jwerty/jwerty.min.js"
+	));
+	elgg_register_js('leaflet', array(
+		'src' => array(
+			'//cdn.leafletjs.com/leaflet-0.7.2/leaflet.js',
+			"$http_base/vendors/leaflet/leaflet.js"
+		)
+	));
+	elgg_register_js('leaflet.markercluster', array(
+		'src' => "$http_base/vendors/leaflet/leaflet.markercluster.js",
+		'deps' => array('leaflet')
+	));
+	elgg_register_js('dataFrance', array(
+		'src' => "$http_base/lib/cacheOfLocalgroupsJSON_11022014.js"
+	));
+	elgg_register_js('highcharts', array(
+		'src' => "$http_base/vendors/Highcharts-3.0.10/js/highcharts.js"
+	));
+
+	// hook to add item in topbar menu
+	elgg_register_event_handler('pagesetup', 'system', 'eaam_page_setup');
+
+	// add location to javascript loggedin user object
+	elgg_register_plugin_hook_handler('to:object', 'entity' , 'eaam_to_object_entity');
 
 	// Register a URL handler for adherent
-	elgg_register_entity_url_handler('object', 'adherent', 'adherent_url');
+	elgg_register_plugin_hook_handler('entity:url', 'object', 'adherent_url');
+
+	// Limit access for adherents only (and non member of the network)
+	elgg_register_plugin_hook_handler('default', 'access', 'eaam_default_access');
 }
 
 
 
 /**
- * Dispatcher for adherent.
+ * Dispatcher for adherents.
  *
  * URLs take the form of
- *  All adherent:         adherent/all
- *  View adherent:        adherent/view/<guid>/<title>
- *  New adherent:         adherent/add/<guid> (container: user, group, parent)
- *  Edit adherent:        adherent/edit/<guid>
+ *  All adherents:        adherents/all
+ *  Statistics:           adherents/statistics
+ *  Map:                  adherents/map
+ *  View an adherent:     adherents/view/<guid>/<title>
+ *  New adherent:         adherents/add/<guid> (container: user, group, parent)
  *
  * Title is ignored
  *
  * @param array $page
  * @return bool
  */
-function adherents_assoc_manager_page_handler($page) {
+function eaam_page_handler($page) {
 
-	elgg_load_library('elgg:2am');
+	elgg_load_library('elgg:eaam');
 
 	if (!isset($page[0])) {
 		$page[0] = 'all';
 	}
 
-	elgg_push_breadcrumb(elgg_echo('adhrent'), 'adhrent/all');
+	elgg_set_context('adherents');
 
-	$pages = dirname(__FILE__) . '/pages/2am';
+	elgg_push_breadcrumb(elgg_echo('adherents'), 'adherents/all');
+
+	$pages = dirname(__FILE__) . '/pages/eaam';
 
 	switch ($page[0]) {
-		case "all":
+		case 'all':
 			include "$pages/all.php";
 			break;
+		case 'map':
+			elgg_set_context('map_adherents');
+			include "$pages/map.php";
+			break;
+		case 'statistics':
+			elgg_set_context('statistics_adherents');
+			include "$pages/statistics.php";
+			break;
+
 		case 'view':
 			set_input('guid', $page[1]);
 			include "$pages/view.php";
@@ -72,12 +120,6 @@ function adherents_assoc_manager_page_handler($page) {
 			gatekeeper();
 			include "$pages/add.php";
 			break;
-		case 'edit':
-			gatekeeper();
-			set_input('guid', $page[1]);
-			include "$pages/edit.php";
-			break;
-
 		default:
 			return false;
 	}
@@ -87,6 +129,61 @@ function adherents_assoc_manager_page_handler($page) {
 }
 
 
+/**
+ * hook to add item in topbar menu
+ */
+function eaam_page_setup() {
+	if (elgg_is_logged_in()) {
+		elgg_register_menu_item('topbar', array(
+			'name' => 'adherents',
+			'href' => 'adherents/all',
+			'text' => defined('MRFB_TEMPLATE') ? '' : elgg_echo('adherents'),
+			'section' => 'alt',
+			'priority' => 10,
+			'link_class' => 'fi-results-demographics',
+			'selected' => elgg_get_context() == 'adherents' ? true : false
+		));
+		elgg_register_menu_item('topbar', array(
+			'name' => 'adherents_list',
+			'section' => 'alt',
+			'parent_name' => 'adherents',
+			'href' => 'adherents/all',
+			'text' => elgg_echo('adherent:list'),
+			'priority' => 100,
+			'link_class' => 'fi-list-thumbnails ',
+		));
+		elgg_register_menu_item('topbar', array(
+			'name' => 'adherents_statistics',
+			'section' => 'alt',
+			'parent_name' => 'adherents',
+			'href' => 'adherents/statistics',
+			'text' => elgg_echo('adherents:statistics'),
+			'priority' => 110,
+			'link_class' => 'fi-graph-bar',
+		));
+		elgg_register_menu_item('topbar', array(
+			'name' => 'add-adherent',
+			'section' => 'alt',
+			'parent_name' => 'adherents',
+			'href' => '#',
+			'text' => elgg_echo('adherent:add'),
+			'priority' => 120,
+			'item_class' => 'elgg-menu-hover-admin',
+			'link_class' => 'fi-torsos-plus',
+		));
+	}
+
+	// map
+	elgg_register_menu_item('topbar', array(
+		'name' => 'map-adherent',
+		'section' => 'left',
+		'href' => 'adherents/map',
+		'text' => ' ',
+		'priority' => 100,
+		'link_class' => 'mrfb-icon',
+		'selected' => elgg_get_context() == 'map_adherents' ? true : false
+	));
+}
 
 /**
  * Populates the ->getUrl() method for adherent objects
@@ -94,12 +191,32 @@ function adherents_assoc_manager_page_handler($page) {
  * @param ElggEntity $entity The adherent object
  * @return string adherent item URL
  */
-function adherent_url($entity) {
-	global $CONFIG;
-
-	$title = $entity->title;
+function adherent_url($hook, $type, $return, $params) {
+	$title = $params['entity']->title;
 	$title = elgg_get_friendly_title($title);
-	return $CONFIG->url . "adherent/view/" . $entity->getGUID() . "/" . $title;
+	return elgg_get_site_url() . "adherents/view/{$params['entity']->getGUID()}/$title";
 }
 
+
+
+/**
+ * Hook to add location info in loggedin ElggUser object passed to javascript
+ */
+function eaam_to_object_entity($hook, $type, $return, $params) {
+	if ($params['entity'] instanceof ElggUser) {
+		$return->location = $params['entity']->location;
+	}
+	return $return;
+}
+
+
+
+/**
+ * Hook to add location info in loggedin ElggUser object passed to javascript
+ */
+function eaam_default_access($hook, $type, $return, $params) {
+	global $fb; $fb->info($return, 'ret');
+	global $fb; $fb->info($params, 'para');
+	return $return;
+}
 
