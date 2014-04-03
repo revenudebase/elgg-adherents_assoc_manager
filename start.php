@@ -26,10 +26,12 @@ function eaam_init() {
 	elgg_register_action('eaam/delete', "$action_path/delete.php");
 	elgg_register_action('eaam/share', "$action_path/share.php");
 
-	elgg_register_page_handler('adherents', 'eaam_page_handler');
-
 	elgg_extend_view('css/elgg', 'eaam/css');
 	elgg_extend_view('js/elgg', 'eaam/js');
+	elgg_extend_view('page/elements/foot', 'eaam/mustaches_templates');
+
+	elgg_register_ajax_view('eaam/ajax/add_adherent');
+	elgg_register_ajax_view('eaam/ajax/edit_adherent');
 
 	elgg_register_js('footable', array(
 		'src' => "$http_base/vendors/footable/footable.all.min.js",
@@ -38,11 +40,15 @@ function eaam_init() {
 	elgg_register_js('jwerty', array(
 		'src' => "$http_base/vendors/jwerty/jwerty.min.js"
 	));
+	/* waiting for merge
 	elgg_register_js('leaflet', array(
 		'src' => array(
 			'//cdn.leafletjs.com/leaflet-0.7.2/leaflet.js',
 			"$http_base/vendors/leaflet/leaflet.js"
 		)
+	));*/
+	elgg_register_js('leaflet', array(
+		'src' => '//cdn.leafletjs.com/leaflet-0.7.2/leaflet.js'
 	));
 	elgg_register_js('leaflet.markercluster', array(
 		'src' => "$http_base/vendors/leaflet/leaflet.markercluster.js",
@@ -55,6 +61,8 @@ function eaam_init() {
 		'src' => "$http_base/vendors/Highcharts-3.0.10/js/highcharts.js"
 	));
 
+	elgg_register_page_handler('adherents', 'eaam_page_handler');
+
 	// hook to add item in topbar menu
 	elgg_register_event_handler('pagesetup', 'system', 'eaam_page_setup');
 
@@ -65,7 +73,10 @@ function eaam_init() {
 	elgg_register_plugin_hook_handler('entity:url', 'object', 'adherent_url');
 
 	// Limit access for adherents only (and non member of the network)
-	elgg_register_plugin_hook_handler('default', 'access', 'eaam_default_access');
+	//elgg_register_plugin_hook_handler('default', 'access', 'eaam_default_access');
+	//elgg_register_plugin_hook_handler('permissions_check', 'user', 'eaam_default_access', 0);
+	// include a hook for plugin authors to include public pages
+	//elgg_register_plugin_hook_handler('public_pages', 'walled_garden', null, array()); // /engine/classes/ElggSite.php line 560
 }
 
 
@@ -203,7 +214,8 @@ function adherent_url($hook, $type, $return, $params) {
  * Hook to add location info in loggedin ElggUser object passed to javascript
  */
 function eaam_to_object_entity($hook, $type, $return, $params) {
-	if ($params['entity'] instanceof ElggUser) {
+	//if ($params['entity'] instanceof ElggUser) {
+	if ($params['entity']->getSubtype() == 'adherent') {
 		$return->location = $params['entity']->location;
 	}
 	return $return;
@@ -215,8 +227,14 @@ function eaam_to_object_entity($hook, $type, $return, $params) {
  * Hook to add location info in loggedin ElggUser object passed to javascript
  */
 function eaam_default_access($hook, $type, $return, $params) {
-	global $fb; $fb->info($return, 'ret');
-	global $fb; $fb->info($params, 'para');
+	if (!$params['entity']->adherent) {
+		$session = _elgg_services()->session;
+		global $fb; $fb->info($session);
+		$session->removeLoggedInUser();
+		$session->set('last_forward_from', current_page_url());
+		register_error(elgg_echo('loggedinrequired'));
+		forward('', 'login');
+	}
 	return $return;
 }
 

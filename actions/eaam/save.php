@@ -5,41 +5,40 @@
 * @package elgg-adherents_assoc_manager
 */
 
-$title = get_input('title', '', false);
+$lastname = get_input('lastname');
+$firstname = get_input('firstname');
+$location = get_input('location');
+$city = get_input('city');
+$guid = get_input('guid', false);
 $description = get_input('description');
-$access_id = get_input('access_id');
-$tags = get_input('tags');
-$guid = get_input('guid');
-$container_guid = get_input('container_guid', elgg_get_logged_in_user_guid());
 
 elgg_make_sticky_form('adherent');
 
-if (!$title || !$description) {
+if (!$lastname || !$firstname) {
 	register_error(elgg_echo('adherent:save:failed'));
 	forward(REFERER);
 }
 
-if ($guid == 0) {
+if (!$guid) {
 	$adherent = new ElggObject;
 	$adherent->subtype = "adherent";
-	$adherent->container_guid = $container_guid;
+//	$adherent->container_guid = $container_guid;
 	$new = true;
 } else {
 	$adherent = get_entity($guid);
 	if (!$adherent->canEdit()) {
-		system_message(elgg_echo('adherent:save:failed'));
+		system_message(elgg_echo('adherent:save:failed1'));
 		forward(REFERRER);
 	}
 }
 
-$tagarray = string_to_tag_array($tags);
-
-$adherent->title = $title;
+//$adherent->title = $title;
 $adherent->description = $description;
-$adherent->access_id = $access_id;
-$adherent->tags = $tagarray;
-$adherent->clarification = $clarification;
-$adherent->objection = $objection;
+//$adherent->access_id = $access_id;
+$adherent->firstname = $firstname;
+$adherent->lastname = $lastname;
+$adherent->location = $location;
+$adherent->city = $city;
 
 if ($adherent->save()) {
 
@@ -52,8 +51,14 @@ if ($adherent->save()) {
 		add_to_river('river/object/adherent/create','create', elgg_get_logged_in_user_guid(), $adherent->getGUID());
 	}
 
-	forward($adherent->getURL());
+	echo json_encode(array(
+		'lastname' => $lastname,
+		'firstname' => $firstname,
+		'location' => $location,
+		'city' => $city,
+		'description' => $description
+	));
 } else {
-	register_error(elgg_echo('adherent:save:failed'));
+	register_error(elgg_echo('adherent:save:failed2'));
 	forward(REFERER);
 }

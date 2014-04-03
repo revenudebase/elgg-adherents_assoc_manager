@@ -10,9 +10,11 @@ $english = array(
 	 */
 	'adherent' => "Adherent",
 	'adherents' => "Adherents",
+	'adherents:everyone' => "All adherents",
 	'adherents:statistics' => "Statistics",
 	'adherent:add' => "Add adherent",
 	'adherent:edit' => "Edit adherent",
+	'adherents:search' => "Search",
 
 	'adherent:moreadherents' => "More adherents",
 	'adherent:new' => "A new adherent",
@@ -33,8 +35,24 @@ $english = array(
 
 	'adherent:no_title' => 'No title',
 
+	'adherents:list:help' => "Help",
+	'adherents:list:help:content' => "",
+
 	/**
-	 * satistics
+	 * Forms
+	 */
+	'adherents:add-adherent' => "Add an adherent",
+	'adherent:name' => "Name",
+	'adherent:lastname' => "Lastname",
+	'adherent:firstname' => "Firstname",
+	'adherent:postalcode' => "Postal code",
+	'adherent:city' => "City",
+	'adherent:note' => "Note",
+	'adherent:creation' => "Creation date",
+	'adherent:modification' => "Modification date",
+
+	/**
+	 * Satistics
 	 */
 	'adherent:statistics' => "Statistics",
 	'adherents:chart:nbr_adherents' => "Number of adherents",

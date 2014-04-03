@@ -60,29 +60,35 @@ if ($adherents) {
 				'value' => $adherent->getGUID()
 			));
 
+			$lastname = ucfirst($adherent->lastname);
+
 			$rows .= <<< END
 				<tr class="row {$even_odd}">
-					<td><b>{$adherent->title}</b>&nbsp;{$adherent->title}</td>
-					<td>{$adherent->title}</td>
+					<td><b>{$lastname}</b>&nbsp;{$adherent->firstname}</td>
 					<td>{$adherent->description}</td>
 					<td data-type="numeric" data-value="{$adherent->time_created}"">{$frienly_time_created}</td>
 					<td data-type="numeric" data-value="{$adherent->time_updated}"">{$frienly_time_updated}</td>
-					<td>{$datas[$adherent->guid]['location']}</td>
+					<td>{$datas[$adherent->guid]['location']} {$adherent->city}</td>
 					<td class="adherent-checkbox">{$checkbox}</td>
 				</tr>
 END;
 	}
 
+	$echo_name = elgg_echo('adherent:name');
+	$echo_note = elgg_echo('adherent:note');
+	$echo_creation = elgg_echo('adherent:creation'); // 'entity:default:strapline'
+	$echo_modification = elgg_echo('adherent:modification');
+	$echo_city = elgg_echo('adherent:city');
+
 	$content = <<<TABLE
-<table id="table-adherents" class="elgg-table-alt toggle-arrow" data-filter="#filter" tabindex="1" style="opacity: 0;">
+<table id="table-adherents" class="elgg-table-alt toggle-arrow" data-filter="#filter" tabindex="1" data-page-size="100" style="opacity: 0;">
 <thead>
 	<tr>
-		<th data-toggle="true" data-sort-initial="true">Nom</th>
-		<th data-hide="phone">Prénom</th>
-		<th data-hide="all">Description</th>
-		<th data-hide="s1000">Création</th>
-		<th>Modification</th>
-		<th data-hide="phone">Code postal</th>
+		<th data-toggle="true">$echo_name</th>
+		<th data-hide="all">$echo_note</th>
+		<th data-hide="s1000" data-sort-initial="descending">$echo_creation</th>
+		<th>$echo_modification</th>
+		<th data-hide="phone">$echo_city</th>
 		<th data-sort-ignore="true"><input type="checkbox" id="all-adherents-checkboxes" class="elgg-input-checkbox"></th>
 	</tr>
 </thead>
@@ -94,7 +100,7 @@ TABLE;
 	$content = elgg_echo('adherent:none');
 }
 
-$title = elgg_echo('adherent:everyone');
+$title = elgg_echo('adherents:everyone');
 
 $body = elgg_view_layout('content', array(
 	'filter' => '',

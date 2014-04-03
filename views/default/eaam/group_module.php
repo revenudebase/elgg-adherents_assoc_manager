@@ -1,8 +1,8 @@
 <?php
 /**
- * List most recent decision on group profile page
+ * group_module
  *
- * @package Elgg-consents_factory
+ * @package elgg-adherents_assoc_manager
  */
 
 $group = elgg_get_page_owner_entity();
