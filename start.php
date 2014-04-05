@@ -148,7 +148,7 @@ function eaam_page_setup() {
 		elgg_register_menu_item('topbar', array(
 			'name' => 'adherents',
 			'href' => 'adherents/all',
-			'text' => defined('MRFB_TEMPLATE') ? '' : elgg_echo('adherents'),
+			'text' => defined('MFRB_TEMPLATE') ? '' : elgg_echo('adherents'),
 			'section' => 'alt',
 			'priority' => 10,
 			'link_class' => 'fi-results-demographics',
@@ -191,7 +191,7 @@ function eaam_page_setup() {
 		'href' => 'adherents/map',
 		'text' => ' ',
 		'priority' => 100,
-		'link_class' => 'mrfb-icon',
+		'link_class' => 'mfrb-icon',
 		'selected' => elgg_get_context() == 'map_adherents' ? true : false
 	));
 }
@@ -229,7 +229,7 @@ function eaam_to_object_entity($hook, $type, $return, $params) {
 function eaam_default_access($hook, $type, $return, $params) {
 	if (!$params['entity']->adherent) {
 		$session = _elgg_services()->session;
-		global $fb; $fb->info($session);
+		//global $fb; $fb->info($session);
 		$session->removeLoggedInUser();
 		$session->set('last_forward_from', current_page_url());
 		register_error(elgg_echo('loggedinrequired'));
