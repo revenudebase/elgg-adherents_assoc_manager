@@ -42,6 +42,7 @@ function eaam_prepare_form_vars($adherent = null) {
 }
 
 
+
 /**
  * Prepare adherent for json
  *

@@ -25,6 +25,10 @@
 			<?php echo elgg_view('input/text', array('name' => 'city')); ?>
 		</div>
 		<div class="">
+			<label><?php echo elgg_echo('adherent:mail'); ?></label><br>
+			<?php echo elgg_view('input/text', array('name' => 'email')); ?>
+		</div>
+		<div class="">
 			<label><?php echo elgg_echo('adherent:note'); ?></label><br>
 			<?php echo elgg_view('input/longtext', array('name' => 'description')); ?>
 		</div>

@@ -7,8 +7,8 @@
 
 // Get adherents
 $adherents = elgg_get_entities(array(
-	'type' => 'object',
-	'subtype' => 'adherent',
+	'type' => 'user',
+	'subtype' => array('adherent', ELGG_ENTITIES_NO_VALUE),
 	'limit' => 100
 ));
 /*elgg_get_metadata(array(
@@ -24,6 +24,7 @@ if ($adherents) {
 	$content = elgg_echo('adherent:none');
 }
 
-$content .= '<div id="map-adherents"></div>';
+$content .= '<div id="map-adherents" class="elgg-layout"></div>';
 
 echo elgg_view_page($title, $content);
+

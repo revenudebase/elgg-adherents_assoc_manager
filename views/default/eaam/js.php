@@ -1,3 +1,9 @@
+require.config({
+	paths: {
+		leaflet: ['//cdn.leafletjs.com/leaflet-0.7.2/leaflet', elgg.get_site_url() + 'mod/elgg-adherents_assoc_manager/vendors/leaflet/leaflet'],
+		test: elgg.get_site_url() + 'mod/elgg-adherents_assoc_manager/vendors/test'
+	}
+});
 
 
 elgg.provide('elgg.eaam');
@@ -76,7 +82,7 @@ elgg.eaam.init = function() {
 	})
 };
 elgg.register_hook_handler('init', 'system', elgg.eaam.init);
-
+elgg.register_hook_handler('history', 'reload_js', elgg.eaam.init);
 
 
 elgg.eaam.list = function() {
@@ -120,14 +126,15 @@ elgg.eaam.list = function() {
 			if ($next) {
 				$focus.removeClass('focus');
 				$next.addClass('focus');
+				return false; //  and prevent page scroll
 			}
 
 			if (jwerty.is('enter', e)) {
-				console.log($focus);
+				elgg.eaam.edit_adherent($focus.find('input[type="checkbox"]').val());
 			}
 			if (jwerty.is('space', e)) {
 				$focus.trigger('footable_toggle_row');
-				return false; // in case of focus is on a checkbox
+				return false; // in case of focus is on a checkbox, and prevent page scroll
 			}
 			if (jwerty.is('s', e)) {
 				var $check = $('.elgg-input-checkbox', $focus);
@@ -153,7 +160,7 @@ elgg.eaam.list = function() {
 	$('#all-adherents-checkboxes').click(function() {
 		var state = $(this).is(':checked');
 
-		$('.adherent-checkbox input').prop('checked', state);
+		$('.row:visible .adherent-checkbox input').prop('checked', state);
 	});
 };
 
@@ -327,6 +334,25 @@ elgg.eaam.statistics = function() {
 
 
 
+elgg.eaam.edit_adherent = function(adherent_GUID) {
+	var eap = 'edit-adherent-popup';
+
+	elgg.createPopup(eap, elgg.echo('adherents:edit-adherent'), function() {
+		elgg.get('ajax/view/eaam/ajax/edit_adherent', {
+			data: {
+				adherent: adherent_GUID
+			},
+			dataType: 'html',
+			cache: false,
+			success: function(json) {
+				$('#'+eap+' .elgg-body').html(json);
+			}
+		});
+	});
+};
+
+
+
 /**
  * Create a new popup
  * @return void
@@ -348,12 +374,12 @@ elgg.createPopup = function(popupID, popupTitle, callback) {
 			opacity: 0.9,
 			create: function(e, ui) {
 				$('.elgg-popup').css('z-index', '-=1');
-				$('#'+popupID).css('z-index', 500);
+				$('#'+popupID).css('z-index', 9500);
 			}
 		})
 		.click(function() {
 			$('.elgg-popup').css('z-index', '-=1');
-			popup.css('z-index', 500);
+			popup.css('z-index', 9500);
 		});
 		popup.find('.elgg-icon-push-pin').click(function() {
 			popup.toggleClass('pinned');

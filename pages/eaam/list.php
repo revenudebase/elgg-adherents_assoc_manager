@@ -13,12 +13,12 @@ if (true) {
 		'name' => 'add_adherent',
 		'href' => "#",
 		'text' => elgg_echo('adherent:add'),
-		'link_class' => 'elgg-button elgg-button-action',
+		'link_class' => 'elgg-button elgg-button-action fi-torsos-plus pbrm',
 	));
 	elgg_register_menu_item('title', array(
 		'name' => 'bulk_adherent',
 		'href' => "#",
-		'text' => elgg_echo('adherent:add'),
+		'text' => elgg_echo('adherent:bulk'),
 		'link_class' => 'elgg-button elgg-button-action',
 	));
 }
@@ -28,13 +28,13 @@ $dbprefix = $CONFIG->dbprefix;
 
 // Get adherents
 $adherents = elgg_get_entities(array(
-	'type' => 'object',
+	'type' => 'user',
 	'subtype' => 'adherent',
 	'limit' => 100
 ));
 
 $metadatas = elgg_get_metadata(array(
-	'type' => 'object',
+	'type' => 'user',
 	'subtype' => 'adherent',
 	'metadata_names' => array('location', 'objection'),
 	'limit' => 100
@@ -66,8 +66,8 @@ if ($adherents) {
 				<tr class="row {$even_odd}">
 					<td><b>{$lastname}</b>&nbsp;{$adherent->firstname}</td>
 					<td>{$adherent->description}</td>
-					<td data-type="numeric" data-value="{$adherent->time_created}"">{$frienly_time_created}</td>
-					<td data-type="numeric" data-value="{$adherent->time_updated}"">{$frienly_time_updated}</td>
+					<td data-type="numeric" data-value="{$adherent->time_created}">{$frienly_time_created}</td>
+					<td data-type="numeric" data-value="{$adherent->time_updated}">{$frienly_time_updated}</td>
 					<td>{$datas[$adherent->guid]['location']} {$adherent->city}</td>
 					<td class="adherent-checkbox">{$checkbox}</td>
 				</tr>

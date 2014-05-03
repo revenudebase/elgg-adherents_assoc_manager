@@ -9,12 +9,12 @@ elgg_push_breadcrumb(elgg_echo('adherent:statistics'));
 
 // Get adherents
 $adherents = elgg_get_entities(array(
-	'type' => 'object',
+	'type' => 'user',
 	'subtype' => 'adherent',
 	'limit' => 100
 ));
 $count_adherents = elgg_get_entities(array(
-	'type' => 'object',
+	'type' => 'user',
 	'subtype' => 'adherent',
 	'limit' => 0,
 	'count' => true

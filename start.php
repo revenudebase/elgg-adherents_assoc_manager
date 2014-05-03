@@ -34,31 +34,21 @@ function eaam_init() {
 	elgg_register_ajax_view('eaam/ajax/edit_adherent');
 
 	elgg_register_js('footable', array(
-		'src' => "$http_base/vendors/footable/footable.all.min.js",
+		'src' => "$http_base/vendors/footable/footable.all.min",
 		'deps' => array('jquery')
 	));
 	elgg_register_js('jwerty', array(
-		'src' => "$http_base/vendors/jwerty/jwerty.min.js"
-	));
-	/* waiting for merge
-	elgg_register_js('leaflet', array(
-		'src' => array(
-			'//cdn.leafletjs.com/leaflet-0.7.2/leaflet.js',
-			"$http_base/vendors/leaflet/leaflet.js"
-		)
-	));*/
-	elgg_register_js('leaflet', array(
-		'src' => '//cdn.leafletjs.com/leaflet-0.7.2/leaflet.js'
+		'src' => "$http_base/vendors/jwerty/jwerty.min"
 	));
 	elgg_register_js('leaflet.markercluster', array(
-		'src' => "$http_base/vendors/leaflet/leaflet.markercluster.js",
+		'src' => "$http_base/vendors/leaflet/leaflet.markercluster",
 		'deps' => array('leaflet')
 	));
 	elgg_register_js('dataFrance', array(
-		'src' => "$http_base/lib/cacheOfLocalgroupsJSON_11022014.js"
+		'src' => "$http_base/lib/cacheOfLocalgroupsJSON_11022014"
 	));
 	elgg_register_js('highcharts', array(
-		'src' => "$http_base/vendors/Highcharts-3.0.10/js/highcharts.js"
+		'src' => "$http_base/vendors/Highcharts-3.0.10/js/highcharts"
 	));
 
 	elgg_register_page_handler('adherents', 'eaam_page_handler');
@@ -72,9 +62,11 @@ function eaam_init() {
 	// Register a URL handler for adherent
 	elgg_register_plugin_hook_handler('entity:url', 'object', 'adherent_url');
 
+//elgg_trigger_plugin_hook('get_sql', 'access', $options, $clauses);
+
 	// Limit access for adherents only (and non member of the network)
-	//elgg_register_plugin_hook_handler('default', 'access', 'eaam_default_access');
-	//elgg_register_plugin_hook_handler('permissions_check', 'user', 'eaam_default_access', 0);
+	elgg_register_plugin_hook_handler('default', 'access', 'eaam_default_access');
+	elgg_register_plugin_hook_handler('permissions_check', 'user', 'eaam_default_access', 0);
 	// include a hook for plugin authors to include public pages
 	//elgg_register_plugin_hook_handler('public_pages', 'walled_garden', null, array()); // /engine/classes/ElggSite.php line 560
 }
@@ -112,7 +104,8 @@ function eaam_page_handler($page) {
 
 	switch ($page[0]) {
 		case 'all':
-			include "$pages/all.php";
+		case 'list':
+			include "$pages/list.php";
 			break;
 		case 'map':
 			elgg_set_context('map_adherents');
@@ -147,7 +140,7 @@ function eaam_page_setup() {
 	if (elgg_is_logged_in()) {
 		elgg_register_menu_item('topbar', array(
 			'name' => 'adherents',
-			'href' => 'adherents/all',
+			'href' => 'adherents/list',
 			'text' => defined('MFRB_TEMPLATE') ? '' : elgg_echo('adherents'),
 			'section' => 'alt',
 			'priority' => 10,
@@ -158,7 +151,7 @@ function eaam_page_setup() {
 			'name' => 'adherents_list',
 			'section' => 'alt',
 			'parent_name' => 'adherents',
-			'href' => 'adherents/all',
+			'href' => 'adherents/list',
 			'text' => elgg_echo('adherent:list'),
 			'priority' => 100,
 			'link_class' => 'fi-list-thumbnails ',
@@ -215,7 +208,7 @@ function adherent_url($hook, $type, $return, $params) {
  */
 function eaam_to_object_entity($hook, $type, $return, $params) {
 	//if ($params['entity'] instanceof ElggUser) {
-	if ($params['entity']->getSubtype() == 'adherent') {
+	if ($params['entity']->getType() == 'user') {
 		$return->location = $params['entity']->location;
 	}
 	return $return;
@@ -224,17 +217,18 @@ function eaam_to_object_entity($hook, $type, $return, $params) {
 
 
 /**
- * Hook to add location info in loggedin ElggUser object passed to javascript
+ * Hook to 
  */
 function eaam_default_access($hook, $type, $return, $params) {
-	if (!$params['entity']->adherent) {
+	//global $fb; $fb->info($params['entity'], 'e');
+	/*if (!$params['entity']->getSubtype() == 'adherent') {
 		$session = _elgg_services()->session;
 		//global $fb; $fb->info($session);
 		$session->removeLoggedInUser();
 		$session->set('last_forward_from', current_page_url());
 		register_error(elgg_echo('loggedinrequired'));
 		forward('', 'login');
-	}
+	}*/
 	return $return;
 }
 

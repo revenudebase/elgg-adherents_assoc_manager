@@ -26,17 +26,20 @@ $english = array(
 
 	'adherent:recent' => "Recent adherents",
 
-	'river:create:object:adherent' => '%s created the adherent %s',
-	'river:comment:object:adherent' => '%s commented on the adherent %s',
+	'river:create:user:default' => '%s created the adherent %s',
+	'river:comment:user:adherent' => '%s commented on the adherent %s',
 	'adherent:river:annotate' => 'a comment on this adherent',
 	'adherent:river:item' => 'an item',
 
-	'item:object:adherent' => 'Adherent',
+	'item:user:adherent' => 'Adherent',
 
 	'adherent:no_title' => 'No title',
 
 	'adherents:list:help' => "Help",
-	'adherents:list:help:content' => "",
+	'adherents:list:help:content' => "	<kbd>↑</kbd><kbd>↓</kbd> move selection<br>
+										<kbd>space</kbd> fold/unfold selection<br>
+										<kbd>↲</kbd> edit selection<br>
+										<kbd>s</kbd> check selection",
 
 	/**
 	 * Forms
@@ -47,9 +50,13 @@ $english = array(
 	'adherent:firstname' => "Firstname",
 	'adherent:postalcode' => "Postal code",
 	'adherent:city' => "City",
+	'adherent:mail' => "Email",
 	'adherent:note' => "Note",
 	'adherent:creation' => "Creation date",
 	'adherent:modification' => "Modification date",
+
+	'eaam:operations:list' => "Operations list",
+	'eaam:no_operation' => "There is no operation",
 
 	/**
 	 * Satistics

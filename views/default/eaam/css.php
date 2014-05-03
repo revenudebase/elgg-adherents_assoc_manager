@@ -29,7 +29,6 @@
 
 .elgg-popup {
 	width: 600px;
-	height: 470px;
 	position: absolute;
 	border-radius: 3px;
 	box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.5);
@@ -41,7 +40,7 @@
 	z-index: 9500;
 	overflow: hidden;
 }
-.elgg-popup .elgg-head {
+.elgg-popup > .elgg-head {
 	background: #F1C40F;
 	padding: 5px;
 	cursor: move;
@@ -51,6 +50,7 @@
 }
 .elgg-popup > .elgg-body {
 	height: 420px;
+	overflow-y: auto; 
 }
 .elgg-popup > .elgg-body > .elgg-ajax-loader {
 	height: 420px;
@@ -58,6 +58,33 @@
 .elgg-popup.pinned .elgg-icon-push-pin {
 	color: green;
 }
+
+kbd {
+	padding: 3px 5px;
+	display: inline-block;
+	background: #F3F3F3;
+	min-width: 30px;
+	text-align: center;
+	margin: 5px;
+	border-radius: 4px;
+	font-weight: bold;
+	color: #666;
+	border: 1px solid #CCC;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+}
+
+#edit-adherent-popup {
+	width: 960px;
+}
+#edit-adherent-popup .elgg-comments {
+	margin-top: 0;
+}
+
+
+
+
+
+
 
 
 
