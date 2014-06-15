@@ -28,7 +28,7 @@ function eaam_init() {
 
 	elgg_extend_view('css/elgg', 'eaam/css');
 	elgg_extend_view('js/elgg', 'eaam/js');
-	elgg_extend_view('page/elements/foot', 'eaam/mustaches_templates');
+	elgg_extend_view('page/elements/foot', 'eaam/handlebars_templates');
 
 	elgg_register_ajax_view('eaam/ajax/add_adherent');
 	elgg_register_ajax_view('eaam/ajax/edit_adherent');
