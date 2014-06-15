@@ -30,7 +30,11 @@
 		</div>
 		<div class="">
 			<label><?php echo elgg_echo('adherent:note'); ?></label><br>
-			<?php echo elgg_view('input/longtext', array('name' => 'description')); ?>
+			<?php echo elgg_view('input/longtext', array(
+				'name' => 'description',
+				'rows' => 3,
+				'autoresize' => ''
+			)); ?>
 		</div>
 		<div class="elgg-foot">
 			<?php echo elgg_view('input/securitytoken'); ?>

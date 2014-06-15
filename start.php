@@ -33,21 +33,21 @@ function eaam_init() {
 	elgg_register_ajax_view('eaam/ajax/add_adherent');
 	elgg_register_ajax_view('eaam/ajax/edit_adherent');
 
-	elgg_register_js('footable', array(
+	elgg_define_js('footable', array(
 		'src' => "$http_base/vendors/footable/footable.all.min",
 		'deps' => array('jquery')
 	));
-	elgg_register_js('jwerty', array(
+	elgg_define_js('jwerty', array(
 		'src' => "$http_base/vendors/jwerty/jwerty.min"
 	));
-	elgg_register_js('leaflet.markercluster', array(
+	elgg_define_js('leaflet.markercluster', array(
 		'src' => "$http_base/vendors/leaflet/leaflet.markercluster",
 		'deps' => array('leaflet')
 	));
-	elgg_register_js('dataFrance', array(
+	elgg_define_js('dataFrance', array(
 		'src' => "$http_base/lib/cacheOfLocalgroupsJSON_11022014"
 	));
-	elgg_register_js('highcharts', array(
+	elgg_define_js('highcharts', array(
 		'src' => "$http_base/vendors/Highcharts-3.0.10/js/highcharts"
 	));
 

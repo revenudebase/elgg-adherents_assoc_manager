@@ -18,7 +18,7 @@ if (!$guid) { // action is new adherent
 		forward(REFERER);
 	}
 
-	$username = str_replace(' ', '' , $firstname . ucfirst($lastname));
+	$username = preg_replace('/[^a-zA-Z0-9]/', '' , $firstname . ucfirst($lastname));
 	if (!validate_username($username)) {
 		register_error(elgg_echo('adherent:save:failed0'));
 		forward(REFERER);
@@ -80,6 +80,7 @@ if ($adherent->save()) {
 	}
 
 	echo json_encode(array(
+		'guid' => $adherent->getGUID(),
 		'lastname' => $lastname,
 		'firstname' => $firstname,
 		'location' => $location,

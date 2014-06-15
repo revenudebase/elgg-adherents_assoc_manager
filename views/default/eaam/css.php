@@ -29,7 +29,7 @@
 
 .elgg-popup {
 	width: 600px;
-	position: absolute;
+	position: fixed;
 	border-radius: 3px;
 	box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.5);
 	top: 50%;
@@ -125,7 +125,9 @@ footable{width:100%}.footable.breakpoint>tbody>tr.footable-detail-show>td{border
 	        user-select: none;
 	-webkit-user-drag: none;
 	}
-.leaflet-marker-icon,
+.leaflet-marker-icon {
+
+}
 .leaflet-marker-shadow {
 	display: block;
 	}
@@ -188,7 +190,7 @@ footable{width:100%}.footable.breakpoint>tbody>tr.footable-detail-show>td{border
 	top: 0;
 	}
 .leaflet-right {
-	right: 0;
+	left: 0;
 	}
 .leaflet-bottom {
 	bottom: 0;
@@ -277,8 +279,8 @@ footable{width:100%}.footable.breakpoint>tbody>tr.footable-detail-show>td{border
 
 .leaflet-container {
 	background-color: #eee;
-	background-image: linear-gradient(#F9F9F9 2px, transparent 2px),
-	linear-gradient(90deg, #F9F9F9 2px, transparent 2px),
+	background-image: linear-gradient(#F3F3F3 2px, transparent 2px),
+	linear-gradient(90deg, #F3F3F3 2px, transparent 2px),
 	linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
 	linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
 	background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px;

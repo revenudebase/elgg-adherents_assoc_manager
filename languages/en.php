@@ -3,7 +3,7 @@
  * elgg-adherents_assoc_manager English language file
  */
 
-$english = array(
+return array(
 
 	/**
 	 * Menu items and titles
@@ -81,5 +81,3 @@ $english = array(
 	'adherent:save:failed' => "The adherent could not be saved...",
 	'adherent:delete:failed' => "The adherent could not be deleted. Please try again.",
 );
-
-add_translation('en', $english);

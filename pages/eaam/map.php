@@ -19,12 +19,12 @@ if ($adherents) {
 	foreach ($adherents as $adherent) {
 		$json_adherents[] = $adherent->toObject();
 	}
-	$content = '<script>map_adherents = ' . json_encode($json_adherents) . ';</script>';
+	$script = '<script>map_adherents = ' . json_encode($json_adherents) . ';</script>';
 } else {
-	$content = elgg_echo('adherent:none');
+	$script = '<script>map_adherents = null;</script>';
 }
 
-$content .= '<div id="map-adherents" class="elgg-layout"></div>';
+$content = '<div class="elgg-layout">' . $script . '<div id="map-adherents"></div></div>';
 
 echo elgg_view_page($title, $content);
 
