@@ -34,8 +34,6 @@
 	box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.5);
 	top: 50%;
 	left: 50%;
-	margin-top: -225px;
-	margin-left: -300px;
 	background: white;
 	z-index: 9500;
 	overflow: hidden;
@@ -43,20 +41,24 @@
 .elgg-popup > .elgg-head {
 	background: #F1C40F;
 	padding: 5px;
+}
+.elgg-popup.ui-draggable > .elgg-head {
 	cursor: move;
 }
 .elgg-menu-popup > li {
 	float: left;
 }
 .elgg-popup > .elgg-body {
-	height: 420px;
-	overflow-y: auto; 
+	overflow-y: auto;
 }
 .elgg-popup > .elgg-body > .elgg-ajax-loader {
-	height: 420px;
+	height: 400px;
 }
 .elgg-popup.pinned .elgg-icon-push-pin {
 	color: green;
+}
+.elgg-popup form .elgg-foot:after {
+	display: none;
 }
 
 kbd {

@@ -1,19 +1,23 @@
 <!-- Template for popups -->
 <script id="popup-template" type="text/x-handlebars-template">
-	<div id="{{popupID}}" class="elgg-popup ui-draggable">
+	<div id="{{id}}" class="elgg-popup"{{#if style}} style="{{style}}"{{/if}}>
 		<div class="elgg-head">
-			<h3 class="float pls">{{popupTitle}}</h3>
+			<h3 class="float pls">{{title}}</h3>
 			<ul class="elgg-menu elgg-menu-popup clearfix float-alt">
+				{{#if pin}}
 				<li class="elgg-menu-item-pin-popup">
 					<a href="#" class="pin">
 						<span class="elgg-icon elgg-icon-push-pin tooltip s" title="<?php echo htmlspecialchars(elgg_echo('popups:pin')); ?>"></span>
 					</a>
 				</li>
+				{{/if}}
+				{{#if close}}
 				<li class="elgg-menu-item-close-popup">
 					<a href="#">
 						<span class="elgg-icon elgg-icon-delete-alt tooltip s" title="<?php echo elgg_echo('popups:close'); ?>"></span>
 					</a>
 				</li>
+				{{/if}}
 			</ul>
 		</div>
 		<div class="elgg-body">
@@ -34,3 +38,22 @@
 		</td>
 	</tr>
 </script>
+
+<script id="map-popup-user" type="text/x-handlebars-template">
+	<div class="elgg-image-block clearfix">
+		<div class="elgg-image">
+			<div class="elgg-avatar elgg-avatar-small">
+				<a href="{{url}}" class="">
+					<img src="{{avatar.small}}" alt="{{username}}" title="{{username}}" class="">
+				</a>
+			</div>
+		</div>
+		<div class="elgg-body">
+			<h3>{{name}}</h3>
+			<h4>{{username}}</h4>
+		</div>
+	</div>
+</script>
+
+
+
