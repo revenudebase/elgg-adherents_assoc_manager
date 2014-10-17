@@ -48,10 +48,12 @@
 				</a>
 			</div>
 		</div>
-		<div class="elgg-body">
-			<h3>{{name}}</h3>
-			<h4>{{username}}</h4>
-		</div>
+		<a href="{{url}}">
+			<div class="elgg-body">
+				<h3>{{name}}</h3>
+				<h4>{{username}}</h4>
+			</div>
+		</a>
 	</div>
 </script>
 

@@ -196,9 +196,11 @@ function eaam_page_setup() {
  * @return string adherent item URL
  */
 function adherent_url($hook, $type, $return, $params) {
-	$title = $params['entity']->title;
-	$title = elgg_get_friendly_title($title);
-	return elgg_get_site_url() . "adherents/view/{$params['entity']->getGUID()}/$title";
+	$entity = $params['entity'];
+	if (elgg_instanceof($entity, 'object', 'adherent')) {
+		$friendly_title = elgg_get_friendly_title($entity->title);
+		return "adherents/view/{$entity->guid}/$friendly_title";
+	}
 }
 
 
