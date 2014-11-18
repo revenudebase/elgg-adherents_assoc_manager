@@ -25,12 +25,34 @@ elgg.eaam.map.init = function() {
 
 
 
+/**
+ * Add adherent in the map
+ * @param {ElggUser} an adherent
+ */
 elgg.eaam.map.addAdherent = function(adh) {
 	var marker,
-		ville = dataFrance[adh.location];
+		ville = adh.location ? elgg.eaam.map.getCity(adh.location) : null; // in case user don't get location
 
-	ville = elgg.isUndefined(ville) ? {lat: 45, long: '-3'} : ville[0];
+	ville = elgg.isNullOrUndefined(ville) ? {lat: 45, long: '-3'} : ville;
 	marker = L.marker(new L.LatLng(ville.lat, ville.long));
 	marker.bindPopup(elgg.handlebars('map-popup-user')(adh));
 	layer.addLayer(marker);
+};
+
+
+
+/**
+ * Return data of a city by postal code. If city doesn't match, we degrade postal code until we match something. Else, it return false.
+ * @param  {string} postalCode The postal code to match
+ * @return {Object}            data of the city
+ */
+elgg.eaam.map.getCity = function(postalCode) {
+	var city = dataFrance[parseInt(postalCode)];
+	if (!elgg.isUndefined(city)) return city[0];
+
+	if (postalCode.replace(/0*$/, '').length > 2) {
+		return elgg.eaam.map.getCity(postalCode.replace(/[1-9]([^1-9]*)$/,'0'+'$1'));
+	} else {
+		return false;
+	}
 };
