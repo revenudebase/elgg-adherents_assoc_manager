@@ -82,7 +82,43 @@ kbd {
 	margin-top: 0;
 }
 
-
+.buttons_map {
+	position: absolute;
+	margin-top: 20px;
+	left: 46px;
+	z-index: 1000;
+	color: #4f3454;
+}
+.buttons_map > li {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	overflow: hidden;
+	margin-right: 20px;
+	list-style: none;
+	float: left;
+}
+.buttons_map > li li:first-child {
+	border: none;
+}
+.buttons_map > li li {
+	background: white;
+	list-style: none;
+	float: left;
+	border-left: 1px solid #ccc;
+	text-align: center;
+}
+.buttons_map a {
+	display: block;
+	height: 32px;
+	width: 52px;
+	font-size: 24px;
+	color: #333;
+	padding: 2px 0 0;
+}
+.buttons_map a:hover {
+	text-decoration: none;
+	background: #f4f4f4;
+}
 
 
 

@@ -15,16 +15,31 @@ $adherents = elgg_get_entities(array(
 	'key' => value,
 ))*/
 if ($adherents) {
-	$json_adherents = array();
+	$json_adherents = new stdClass();
 	foreach ($adherents as $adherent) {
-		$json_adherents[] = $adherent->toObject();
+		$guid = $adherent->getGUID();
+		$json_adherents->$guid = $adherent->toObject();
 	}
 	$script = '<script>map_adherents = ' . json_encode($json_adherents) . ';</script>';
 } else {
 	$script = '<script>map_adherents = null;</script>';
 }
 
-$content = '<div class="elgg-layout">' . $script . '<div id="map-adherents"></div></div>';
+$content = <<<HTML
+<div class="elgg-layout">
+	$script
+	<div id="map-adherents"></div>
+	<ul class="buttons_map">
+		<li>
+			<ul>
+				<li><a href="#" class="mfrb-icon fi-world" onclick="$('#map-adherents').click();map.setView(L.latLng(0, 0), 3);"></a></li>
+				<li class="elgg-menu-item-map-adherent"><a href="#" class="mfrb-icon t tooltip n" onclick="$('#map-adherents').click();map.setView(elgg.eaam.map.settings.centerFrance, elgg.eaam.map.settings.defaultZoom);return false;" original-title="Centrer sur la France"></a></li>
+				<li><a href="#" class="mfrb-icon fi-marker t" onclick="elgg.eaam.map.showMyMarker();"></a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+HTML;
 
 echo elgg_view_page($title, $content);
 

@@ -1,8 +1,28 @@
 elgg.provide('elgg.eaam.map');
 
+/**
+ * Set default settings
+ */
+elgg.eaam.map.settings = {
+	centerFrance: [46.763056, 2.424722],
+	defaultZoom: 6 - (($(window).width() <= 768) ? 1 : 0), // zoom par défaut,
+	adrerentWithoutLocation: {lat: 45, lng: '-3'}
+};
 
+
+
+/**
+ * Initialise map and add adherents markers
+ */
+map = null;
+layer = null;
 elgg.eaam.map.init = function() {
-	var map = L.map('map-adherents').setView([46.763056, 2.424722], 6);
+	map = L.map('map-adherents').setView(elgg.eaam.map.settings.centerFrance, elgg.eaam.map.settings.defaultZoom);
+	L.Icon.Mine = L.Icon.Default.extend({
+		options: {
+			iconUrl: elgg.get_site_url()+'/mod/elgg-adherents_assoc_manager/graphics/marker-icon-mine.png'
+		}
+	});
 
 	L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', { // http://leaflet-extras.github.io/leaflet-providers/preview/index.html
 		attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
@@ -10,7 +30,6 @@ elgg.eaam.map.init = function() {
 		maxZoom: 18
 	}).addTo(map);
 
-	markers = [];
 	layer = L.markerClusterGroup({
 		spiderfyDistanceMultiplier: 2,
 		maxClusterRadius: 63
@@ -31,11 +50,13 @@ elgg.eaam.map.init = function() {
  */
 elgg.eaam.map.addAdherent = function(adh) {
 	var marker,
-		ville = adh.location ? elgg.eaam.map.getCity(adh.location) : null; // in case user don't get location
+		ville = adh.location ? elgg.eaam.map.getCity(adh.location) : null, // in case user don't get location
+		icon = elgg.get_logged_in_user_guid() == adh.guid ? {icon: new L.Icon.Mine()} : {};
 
-	ville = elgg.isNullOrUndefined(ville) ? {lat: 45, long: '-3'} : ville;
-	marker = L.marker(new L.LatLng(ville.lat, ville.long));
+	ville = elgg.isNullOrUndefined(ville) ? elgg.eaam.map.settings.adrerentWithoutLocation : ville;
+	marker = L.marker(new L.LatLng(ville.lat, ville.lng), icon);
 	marker.bindPopup(elgg.handlebars('map-popup-user')(adh));
+	adh.marker = marker; // add marker to map_adherents
 	layer.addLayer(marker);
 };
 
@@ -55,4 +76,15 @@ elgg.eaam.map.getCity = function(postalCode) {
 	} else {
 		return false;
 	}
+};
+
+
+elgg.eaam.map.showMyMarker = function() {
+	var myMarker = map_adherents[elgg.get_logged_in_user_guid()].marker;
+
+	$('#map-adherents').click(); // close popup if any
+	layer.zoomToShowLayer(myMarker, function(){
+		map.setView(myMarker.getLatLng(), map.getZoom());
+		myMarker.openPopup();
+	});
 };
