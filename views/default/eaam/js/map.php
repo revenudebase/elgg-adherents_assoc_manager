@@ -68,6 +68,7 @@ elgg.eaam.map.addAdherent = function(adh) {
  * @return {Object}            data of the city
  */
 elgg.eaam.map.getCity = function(postalCode) {
+	if (!$.isNumeric(postalCode) || postalCode.length != 5) return false;
 	var city = dataFrance[parseInt(postalCode)];
 	if (!elgg.isUndefined(city)) return city[0];
 

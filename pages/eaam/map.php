@@ -8,7 +8,7 @@
 // Get adherents
 $adherents = elgg_get_entities(array(
 	'type' => 'user',
-	'subtype' => array('adherent', ELGG_ENTITIES_NO_VALUE),
+	//'subtype' => array('adherent', ELGG_ENTITIES_NO_VALUE),
 	'limit' => 100
 ));
 /*elgg_get_metadata(array(
